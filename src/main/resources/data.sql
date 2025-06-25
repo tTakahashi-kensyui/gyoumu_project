@@ -12,13 +12,13 @@ INSERT INTO userData (user_id, name, email, store_id) VALUES (3, '鈴木一郎',
 INSERT INTO attendanceData (
     attendance_id, user_id, date, start_time, end_time, break_time, work_time, status, remark
 ) VALUES (
-    1, 1, '2025-06-25', '09:00:00', '18:00:00', 1.0, 8.0, '出勤', ''
+    1, 1, '2025-06-25', '09:00:00', '18:00:00', 1.0, 8.0, '未出勤', ''
 );
 
 INSERT INTO attendanceData (
     attendance_id, user_id, date, start_time, end_time, break_time, work_time, status, remark
 ) VALUES (
-    2, 2, '2025-06-25', NULL, NULL, NULL, NULL, '欠勤', '体調不良'
+    2, 2, '2025-06-25', NULL, NULL, NULL, NULL, '未出勤', ''
 );
 
 INSERT INTO attendanceData (
