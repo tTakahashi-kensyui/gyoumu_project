@@ -1,15 +1,35 @@
 package com.example.demo.Attendance;
 
-public class AttendanceEntity {
+public class AttendanceWithStoreEntity {
 	private int attendanceId;
 	private int userId;
 	private String date;
 	private String status;
 	private String startTime;
 	private String endTime;
-	private String workTime;
+	public Double getBreakTime() {
+		return breakTime;
+	}
+	public void setBreakTime(Double breakTime) {
+		this.breakTime = breakTime;
+	}
+	public Double getWorkTime() {
+		return workTime;
+	}
+	public void setWorkTime(Double workTime) {
+		this.workTime = workTime;
+	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	private Double breakTime;
+	private Double workTime;
 	private String remark;
 	private String storeName;
+
 
 	// Getter Setter
 
@@ -54,17 +74,5 @@ public class AttendanceEntity {
 	}
 	public void setStoreName(String storeName) {
 		this.storeName = storeName;
-	}
-	public String getWorkTime() {
-		return workTime;
-	}
-	public void setWorkTime(String workTime) {
-		this.workTime = workTime;
-	}
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
 	}
 }

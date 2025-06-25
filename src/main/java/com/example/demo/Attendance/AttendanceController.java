@@ -21,7 +21,7 @@ public class AttendanceController {
 	// 勤怠一覧ページ
 	@GetMapping
 	public String attendanceList(Model model) {
-		List<AttendanceEntity> list = attendanceDao.findAll();
+		List<AttendanceWithStoreEntity> list = attendanceDao.findAllWithStore();
 		model.addAttribute("attendanceList", list);
 		model.addAttribute("title", "出退勤管理");
 		return "Attendance/attendance";

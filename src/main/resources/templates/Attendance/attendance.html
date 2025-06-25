@@ -9,20 +9,24 @@
 
     <table border="1">
         <tr>
-            <th>attendance_id</th>
-            <th>user_id</th>
-            <th>date</th>
-            <th>status</th>
-            <th>start_time</th>
-            <th>end_time</th>
+			<th>日付</th>
+            <th>ユーザーID</th>
+            <th>店舗名</th>
+            <th>ステータス</th>
+            <th>出勤時間</th>
+            <th>退勤時間</th>
+            <th>勤務時間</th>
+            <th>備考欄</th>
         </tr>
         <tr th:each="item : ${attendanceList}">
-            <td th:text="${item.attendanceId}"></td>
+			<td th:text="${item.date}"></td>
             <td th:text="${item.userId}"></td>
-            <td th:text="${item.date}"></td>
+            <td th:text="${item.storeName}"></td>
             <td th:text="${item.status}"></td>
             <td th:text="${item.startTime}"></td>
             <td th:text="${item.endTime}"></td>
+            <td th:text="${item.workTime}"></td> <!-- 勤務時間 hh:mm:ss -->
+            <td th:text="${item.remark}"></td>
         </tr>
     </table>
 

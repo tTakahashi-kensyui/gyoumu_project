@@ -30,7 +30,7 @@ public class AttendanceDao {
 
 		String sql = """
 				UPDATE attendanceData
-				SET status = '出勤',
+				SET status = '出勤中',
 				    start_time = ?
 				WHERE user_id = ? AND date = ?
 				""";
@@ -51,4 +51,27 @@ public class AttendanceDao {
 				""";
 		jdbcTemplate.update(sql, nowTime, userId, today);
 	}
+	
+	// 勤怠一覧（店舗名付き）
+		public List<AttendanceWithStoreEntity> findAllWithStore() {
+			String sql = """
+				SELECT
+					a.attendance_id,
+					a.user_id,
+					a.date,
+					a.status,
+					a.start_time,
+					a.end_time,
+					a.break_time,
+					a.work_time,
+					a.remark,
+					s.store_name
+				FROM
+					attendanceData a
+				JOIN userData u ON a.user_id = u.user_id
+				JOIN storeData s ON u.store_id = s.store_id
+			""";
+
+			return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AttendanceWithStoreEntity.class));
+		}
 }
