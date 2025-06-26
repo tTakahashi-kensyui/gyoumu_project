@@ -24,5 +24,8 @@ public class MenuController {
 	public String hatyuu(Model model) {
 		return "hattyuu/hattyuu";
 	}
-
+	@RequestMapping("/home")
+	public String kaikei(Model model) {
+		return "kaikei/home";
+	}
 }
