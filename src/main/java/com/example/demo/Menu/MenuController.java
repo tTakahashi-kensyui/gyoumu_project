@@ -20,5 +20,9 @@ public class MenuController {
 		model.addAttribute("title", "トップページ");
 		return "Menu/index";
 	}
+	@RequestMapping("/hattyuu")
+	public String hatyuu(Model model) {
+		return "hattyuu/hattyuu";
+	}
 
 }
