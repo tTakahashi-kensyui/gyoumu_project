@@ -104,7 +104,7 @@ public class AttendanceDao {
 	//		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AttendanceWithStoreEntity.class));
 	//	}
 
-	// 勤怠一覧（店舗名、ユーザー名付き）
+	 //勤怠一覧（店舗名、ユーザー名付き）
 	public List<AttendanceWithStoreAndUserEntity> findAttendanceWithStoreAndUser() {
 		String sql = """
 				    SELECT
@@ -142,5 +142,19 @@ public class AttendanceDao {
 			entity.setRemark(rs.getString("remark"));
 			return entity;
 		});
+	}
+	
+	public AttendanceWithStoreAndUserEntity findByUserIdAndToday(int userId) {
+	    String sql = "SELECT * FROM attendanceData WHERE user_id = ? AND date = CURRENT_DATE";
+	    return jdbcTemplate.query(sql, new Object[]{userId}, rs -> {
+	        if (rs.next()) {
+	            AttendanceWithStoreAndUserEntity entity = new AttendanceWithStoreAndUserEntity();
+	            entity.setAttendanceId(rs.getInt("attendance_id"));
+	            entity.setStatus(rs.getString("status"));
+	            // 必要なら他のデータもセット
+	            return entity;
+	        }
+	        return null;
+	    });
 	}
 }
