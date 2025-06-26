@@ -104,15 +104,13 @@ public class AttendanceDao {
 	//		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AttendanceWithStoreEntity.class));
 	//	}
 
-	 //勤怠一覧（店舗名、ユーザー名付き）
-	public List<AttendanceWithStoreAndUserEntity> findAttendanceWithStoreAndUser() {
+	//勤怠一覧（ユーザー名付き）
+	public List<AttendanceWithUserEntity> findAttendanceWithUser() {
 		String sql = """
 				    SELECT
 				        a.attendance_id,
 				        a.user_id,
 				        u.user_name,
-				        s.store_id,
-				        s.store_name,
 				        a.date,
 				        a.start_time,
 				        a.end_time,
@@ -122,17 +120,14 @@ public class AttendanceDao {
 				        a.remark
 				    FROM attendanceData a
 				    JOIN userData u ON a.user_id = u.user_id
-				    JOIN storeData s ON u.store_id = s.store_id
 				    ORDER BY a.attendance_id
 				""";
 
 		return jdbcTemplate.query(sql, (rs, rowNum) -> {
-			AttendanceWithStoreAndUserEntity entity = new AttendanceWithStoreAndUserEntity();
+			AttendanceWithUserEntity entity = new AttendanceWithUserEntity();
 			entity.setAttendanceId(rs.getInt("attendance_id"));
 			entity.setUserId(rs.getInt("user_id"));
 			entity.setUserName(rs.getString("user_name"));
-			entity.setStoreId(rs.getInt("store_id"));
-			entity.setStoreName(rs.getString("store_name"));
 			entity.setDate(rs.getDate("date").toLocalDate());
 			entity.setStartTime(rs.getTime("start_time") != null ? rs.getTime("start_time").toLocalTime() : null);
 			entity.setEndTime(rs.getTime("end_time") != null ? rs.getTime("end_time").toLocalTime() : null);
@@ -144,17 +139,57 @@ public class AttendanceDao {
 		});
 	}
 	
+	//勤怠一覧（店舗名、ユーザー名付き）
+		public List<AttendanceWithStoreAndUserEntity> findAttendanceWithStoreAndUser() {
+			String sql = """
+					    SELECT
+					        a.attendance_id,
+					        a.user_id,
+					        u.user_name,
+					        s.store_id,
+					        s.store_name,
+					        a.date,
+					        a.start_time,
+					        a.end_time,
+					        a.break_time,
+					        a.work_time,
+					        a.status,
+					        a.remark
+					    FROM attendanceData a
+					    JOIN userData u ON a.user_id = u.user_id
+					    JOIN storeData s ON u.store_id = s.store_id
+					    ORDER BY a.attendance_id
+					""";
+
+			return jdbcTemplate.query(sql, (rs, rowNum) -> {
+				AttendanceWithStoreAndUserEntity entity = new AttendanceWithStoreAndUserEntity();
+				entity.setAttendanceId(rs.getInt("attendance_id"));
+				entity.setUserId(rs.getInt("user_id"));
+				entity.setUserName(rs.getString("user_name"));
+				entity.setStoreId(rs.getInt("store_id"));
+				entity.setStoreName(rs.getString("store_name"));
+				entity.setDate(rs.getDate("date").toLocalDate());
+				entity.setStartTime(rs.getTime("start_time") != null ? rs.getTime("start_time").toLocalTime() : null);
+				entity.setEndTime(rs.getTime("end_time") != null ? rs.getTime("end_time").toLocalTime() : null);
+				entity.setBreakTime(rs.getDouble("break_time"));
+				entity.setWorkTime(rs.getString("work_time"));
+				entity.setStatus(rs.getString("status"));
+				entity.setRemark(rs.getString("remark"));
+				return entity;
+			});
+		}
+
 	public AttendanceWithStoreAndUserEntity findByUserIdAndToday(int userId) {
-	    String sql = "SELECT * FROM attendanceData WHERE user_id = ? AND date = CURRENT_DATE";
-	    return jdbcTemplate.query(sql, new Object[]{userId}, rs -> {
-	        if (rs.next()) {
-	            AttendanceWithStoreAndUserEntity entity = new AttendanceWithStoreAndUserEntity();
-	            entity.setAttendanceId(rs.getInt("attendance_id"));
-	            entity.setStatus(rs.getString("status"));
-	            // 必要なら他のデータもセット
-	            return entity;
-	        }
-	        return null;
-	    });
+		String sql = "SELECT * FROM attendanceData WHERE user_id = ? AND date = CURRENT_DATE";
+		return jdbcTemplate.query(sql, new Object[] { userId }, rs -> {
+			if (rs.next()) {
+				AttendanceWithStoreAndUserEntity entity = new AttendanceWithStoreAndUserEntity();
+				entity.setAttendanceId(rs.getInt("attendance_id"));
+				entity.setStatus(rs.getString("status"));
+				// 必要なら他のデータもセット
+				return entity;
+			}
+			return null;
+		});
 	}
 }
