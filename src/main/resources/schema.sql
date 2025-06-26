@@ -27,13 +27,13 @@ CREATE TABLE attendanceData (
     FOREIGN KEY (user_id) REFERENCES userData(user_id)
 );
 
--- シフトテーブル
-CREATE TABLE shift(
-	shift_id int PRIMARY KEY AUTO_INCREMENT,
-	staff_id int FOREIGN KEY REFERENCES userData(user_id),
-	shift_date DATE,
-	start_time TIME,
-	end_time TIME,
-	status VARCHAR
-	
-);
+---- シフトテーブル
+--CREATE TABLE shift(
+--	shift_id int PRIMARY KEY AUTO_INCREMENT,
+--	staff_id int FOREIGN KEY REFERENCES userData(user_id),
+--	shift_date DATE,
+--	start_time TIME,
+--	end_time TIME,
+--	status VARCHAR
+--	
+--);

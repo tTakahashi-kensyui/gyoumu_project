@@ -3,8 +3,8 @@ package com.example.demo.Attendance;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class AttendanceWithStoreAndUserEntity {
-	  // attendanceDataのカラム
+public class AttendanceWithUserEntity {
+	 // attendanceDataのカラム
     private int attendanceId;
     private int userId;
     private LocalDate date;
@@ -13,25 +13,7 @@ public class AttendanceWithStoreAndUserEntity {
     private double breakTime;
     private String workTime;
     private String status;
-    private int storeId;
-    private String storeName;
-    public int getStoreId() {
-		return storeId;
-	}
-
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
-
-	public String getStoreName() {
-		return storeName;
-	}
-
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
-	}
-
-	public int getAttendanceId() {
+    public int getAttendanceId() {
 		return attendanceId;
 	}
 
