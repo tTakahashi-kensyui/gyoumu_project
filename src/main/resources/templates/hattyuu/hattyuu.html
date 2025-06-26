@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ラーメン屋 個別発注システム</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #fffaf3;
+      color: #333;
+    }
+
+    h1, h2 {
+      color: #d35400;
+      border-bottom: 2px solid #f39c12;
+      padding-bottom: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid #f5cba7;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8c471;
+      color: #4d2600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fffaf0;
+    }
+
+    form {
+      background-color: #fff5e6;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #ffe0b2;
+      margin-bottom: 30px;
+    }
+
+    input, button {
+      padding: 8px;
+      margin: 5px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .small-btn {
+      width: auto;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #cf711c;
+    }
+
+    #orderLog {
+      margin-top: 30px;
+      background-color: #fff5e6;
+      padding: 15px;
+      border: 1px solid #ffd8a8;
+      border-radius: 8px;
+    }
+
+    .log-entry {
+      padding: 5px 0;
+      border-bottom: 1px dashed #e0a96d;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🍜 ラーメン屋 発注システム</h1>
+
+  <h2>🔸 固定品目</h2>
+  <table id="fixedTable">
+    <thead>
+      <tr>
+        <th>品目</th>
+        <th>発注数（AI予測値が初期値）</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>麺</td><td><input type="number" value="30"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>スープ</td><td><input type="number" value="20"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>チャーシュー</td><td><input type="number" value="15"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>メンマ</td><td><input type="number" value="10"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>のり</td><td><input type="number" value="10"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>ネギ</td><td><input type="number" value="12"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>玉子</td><td><input type="number" value="18"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>どんぶり</td><td><input type="number" value="5"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>レンゲ</td><td><input type="number" value="5"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>調味料</td><td><input type="number" value="3"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+    </tbody>
+  </table>
+
+  <h2>🔸 自由入力品目</h2>
+  <form id="customForm">
+    <input type="text" id="customName" placeholder="品目名（例：ティッシュ）" required>
+    <input type="number" id="customQty" placeholder="発注数（例：5）" required>
+    <button type="submit">発注</button>
+  </form>
+
+  <table id="customTable">
+    <thead>
+      <tr>
+        <th>品目</th>
+        <th>発注数</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 追加された品目がここに入る -->
+    </tbody>
+  </table>
+
+  <div id="orderLog">
+    <h2>📋 発注履歴</h2>
+    <div id="logList">
+      <!-- 発注ログがここに表示される -->
+    </div>
+  </div>
+
+  <script>
+    const customForm = document.getElementById("customForm");
+    const customTableBody = document.querySelector("#customTable tbody");
+    const logList = document.getElementById("logList");
+
+    function logOrder(name, qty) {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString("ja-JP");
+      const timeStr = now.toLocaleTimeString("ja-JP", { hour: '2-digit', minute: '2-digit' });
+      const entry = document.createElement("div");
+      entry.className = "log-entry";
+      entry.textContent = `【${dateStr} ${timeStr}】「${name}」を ${qty} 個 発注しました。`;
+      logList.prepend(entry);
+    }
+
+    // 固定品目の発注ボタンにイベント追加
+    document.querySelectorAll("#fixedTable .order-btn").forEach(button => {
+      button.addEventListener("click", function() {
+        const row = this.closest("tr");
+        const name = row.cells[0].textContent;
+        const qty = row.cells[1].querySelector("input").value;
+        if (qty > 0) {
+          logOrder(name, qty);
+        } else {
+          alert("発注数を入力してください。");
+        }
+      });
+    });
+
+    // 自由入力フォームの「発注」ボタン（品目を追加＋即発注）
+    customForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("customName").value.trim();
+      const qty = document.getElementById("customQty").value;
+
+      if (name && qty > 0) {
+        // 表に追加
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${name}</td>
+          <td><input type="number" value="${qty}"></td>
+          <td><button class="order-btn small-btn">発注</button></td>
+        `;
+        customTableBody.appendChild(row);
+
+        // 発注履歴に記録
+        logOrder(name, qty);
+
+        // 新しい発注ボタンにもイベント付加
+        const newButton = row.querySelector("button");
+        newButton.addEventListener("click", function() {
+          const qtyVal = row.querySelector("input").value;
+          if (qtyVal > 0) {
+            logOrder(name, qtyVal);
+          } else {
+            alert("発注数を入力してください。");
+          }
+        });
+
+        // 入力フォームをリセット
+        customForm.reset();
+      } else {
+        alert("品目名と発注数を入力してください。");
+      }
+    });
+  </script>
+
+</body>
+</html>
