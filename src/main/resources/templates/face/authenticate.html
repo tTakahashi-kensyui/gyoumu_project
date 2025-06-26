@@ -67,7 +67,7 @@
 		setTimeout(() => {
 			document.getElementById('message').innerText = "判定中...";
 
-			fetch('/camera/attendance?type=' + selectedAction, {method: 'POST'})
+			fetch('/face/attendance?type=' + selectedAction, {method: 'POST'})
 				.then(response => {
 					if (response.ok) {
 						if (selectedAction === 'start') {

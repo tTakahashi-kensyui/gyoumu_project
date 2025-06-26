@@ -20,7 +20,7 @@ public class AttendanceController {
 
 	@GetMapping
 	public String showAttendanceList(Model model) {
-	    List<AttendanceWithStoreAndUserEntity> list = attendanceDao.findAttendanceWithStoreAndUser();
+	    List<AttendanceWithUserEntity> list = attendanceDao.findAttendanceWithUser();
 	    model.addAttribute("attendanceList", list);
 	    return "attendance/attendance";
 	}

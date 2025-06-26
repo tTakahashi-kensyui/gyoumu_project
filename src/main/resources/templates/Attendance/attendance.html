@@ -9,7 +9,6 @@
 
 	<table border="1">
 	    <tr>
-	        <th>店舗名</th>
 	        <th>ユーザー名</th>
 	        <th>日付</th>
 	        <th>出勤時間</th>
@@ -19,7 +18,6 @@
 	        <th>操作</th>
 	    </tr>
 	    <tr th:each="item : ${attendanceList}">
-	        <td th:text="${item.storeName}"></td>
 	        <td th:text="${item.userName}"></td>
 	        <td th:text="${item.date}"></td>
 	        <td th:text="${item.startTime} ?: '-'"></td>
