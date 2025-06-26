@@ -7,7 +7,7 @@ CREATE TABLE storeData (
 -- ユーザーテーブル
 CREATE TABLE userData (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
+    user_name VARCHAR(100) NOT NULL,
     email VARCHAR(100),
     store_id INT NOT NULL,
     FOREIGN KEY (store_id) REFERENCES storeData(store_id)
@@ -21,7 +21,7 @@ CREATE TABLE attendanceData (
     start_time TIME,
     end_time TIME,
     break_time DOUBLE DEFAULT 0,
-    work_time DOUBLE DEFAULT 0,
+    work_time TIME,
     status VARCHAR(50) NOT NULL DEFAULT '未出勤',
     remark VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES userData(user_id)

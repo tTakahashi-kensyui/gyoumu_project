@@ -13,10 +13,10 @@ public class AttendanceWithStoreEntity {
 	public void setBreakTime(Double breakTime) {
 		this.breakTime = breakTime;
 	}
-	public Double getWorkTime() {
+	public String getWorkTime() {
 		return workTime;
 	}
-	public void setWorkTime(Double workTime) {
+	public void setWorkTime(String workTime) {
 		this.workTime = workTime;
 	}
 	public String getRemark() {
@@ -26,7 +26,7 @@ public class AttendanceWithStoreEntity {
 		this.remark = remark;
 	}
 	private Double breakTime;
-	private Double workTime;
+	private String workTime;
 	private String remark;
 	private String storeName;
 

@@ -18,14 +18,21 @@ public class AttendanceController {
 		this.attendanceDao = attendanceDao;
 	}
 
-	// 勤怠一覧ページ
 	@GetMapping
-	public String attendanceList(Model model) {
-		List<AttendanceWithStoreEntity> list = attendanceDao.findAllWithStore();
-		model.addAttribute("attendanceList", list);
-		model.addAttribute("title", "出退勤管理");
-		return "Attendance/attendance";
+	public String showAttendanceList(Model model) {
+	    List<AttendanceWithStoreAndUserEntity> list = attendanceDao.findAttendanceWithStoreAndUser();
+	    model.addAttribute("attendanceList", list);
+	    return "attendance/attendance";
 	}
+	
+//	// 勤怠一覧ページ
+//	@GetMapping
+//	public String attendanceList(Model model) {
+//		List<AttendanceWithStoreEntity> list = attendanceDao.findAllWithStore();
+//		model.addAttribute("attendanceList", list);
+//		model.addAttribute("title", "出退勤管理");
+//		return "Attendance/attendance";
+//	}
 
 	// 出勤処理
 	@PostMapping("/start")
@@ -40,4 +47,7 @@ public class AttendanceController {
 		attendanceDao.endAttendance(userId);
 		return "redirect:/attendance";
 	}
+	
+	
+	
 }
