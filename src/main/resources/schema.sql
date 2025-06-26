@@ -20,9 +20,9 @@ CREATE TABLE attendanceData (
     date DATE NOT NULL,
     start_time TIME,
     end_time TIME,
-    break_time DOUBLE,
-    work_time DOUBLE,
-    status VARCHAR(50) NOT NULL,
+    break_time DOUBLE DEFAULT 0,
+    work_time DOUBLE DEFAULT 0,
+    status VARCHAR(50) NOT NULL DEFAULT '未出勤',
     remark VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES userData(user_id)
 );
