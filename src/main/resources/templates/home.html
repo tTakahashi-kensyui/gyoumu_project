@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>会計管理TOP</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #fff7f0;
+      padding: 40px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-top: 5px solid #ff7a00;
+    }
+    h1 {
+      color: #ff7a00;
+      text-align: center;
+    }
+    .link-button {
+      display: inline-block;
+      background-color: #ff7a00;
+      color: white;
+      padding: 12px 20px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 16px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .section {
+      margin-top: 40px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #ffe0b3;
+    }
+    input {
+      width: 100%;
+      padding: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💰会計管理画面　</h1>
+
+    <a class="link-button" th:href="@{/summary}">売上概要ページへ →</a>
+
+    <div class="section">
+      <h2>本日の売上入力</h2>
+      <table>
+        <tr>
+        	<tr><th>日付</th><td><input type="date" id="input-date"></td></tr>
+			<tr><th>商品名</th><td><input type="text" id="input-name"></td></tr>
+			<tr><th>数量</th><td><input type="number" id="input-qty"></td></tr>
+			<tr><th>単価</th><td><input type="number" id="input-price"></td></tr>
+          <th>小計</th>
+        </tr>
+        <tr>
+          <td><input type="date" /></td>
+          <td><input type="text" placeholder="商品名" /></td>
+          <td><input type="number" min="0" /></td>
+          <td><input type="number" min="0" step="0.01" /></td>
+          <td><input type="number" readonly /></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>概要</h2>
+      <table>
+        <tr>
+          <th>前日繰越金</th>
+          <td><input type="number" /></td>
+        </tr>
+        <tr>
+          <th>合計売上金額</th>
+          <td><input type="number" readonly /></td>
+        </tr>
+        <tr>
+          <th>準備金（翌日繰越）</th>
+          <td><input type="number" /></td>
+        </tr>
+      </table>
+	  <button class="btn" onclick="saveData()">保存して売上概要へ</button>
+
+	  <script>
+	    function saveData() {
+	      const data = {
+	        date: document.getElementById("input-date").value,
+	        name: document.getElementById("input-name").value,
+	        qty: document.getElementById("input-qty").value,
+	        price: document.getElementById("input-price").value,
+	        subtotal: (
+	          (parseFloat(document.getElementById("input-qty").value) || 0) *
+	          (parseFloat(document.getElementById("input-price").value) || 0)
+	        ).toFixed(2)
+	      };
+	      localStorage.setItem("todaySale", JSON.stringify(data));
+	      window.location.href = "summary.html";
+	    }
+	  </script>
+
+    </div>
+  </div>
+</body>
+</html>
