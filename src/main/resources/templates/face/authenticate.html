@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" th:href="@{/style.css}">
+	
+	<title>顔認証（指選択）</title>
+</head>
+
+<body>
+	<div class="container">
+
+		<img src="/images/peace.png" width="300">
+
+		<form method="post" th:action="@{/face/authenticate}">
+			<button type="submit" name="finger" value="1">1</button>
+			<button type="submit" name="finger" value="2">2</button>
+			<button type="submit" name="finger" value="3">3</button>
+		</form>
+
+		<br>
+		<a th:href="@{/}">トップに戻る</a>
+	</div>
+</body>
+
+</html>

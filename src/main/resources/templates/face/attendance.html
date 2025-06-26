@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>出退勤選択</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>出退勤を選んでください</h1>
+
+        <form method="post" th:action="@{/face/attendance/start}">
+            <button class="big-button" type="submit">出勤</button>
+        </form>
+
+        <form method="post" th:action="@{/face/attendance/end}">
+            <button class="big-button" type="submit">退勤</button>
+        </form>
+
+        <a th:href="@{/}">トップに戻る</a>
+    </div>
+</body>
+</html>
