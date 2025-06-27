@@ -29,30 +29,17 @@ public class AttendanceDao {
 
 	// 出勤処理
 	public void startAttendance(int userId) {
-		//		// 現在時刻
-		//		String nowTime = LocalTime.now().toString();
-		//		String today = LocalDate.now().toString();
-		//
-		//		String sql = """
-		//				UPDATE attendanceData
-		//				SET status = '出勤中',
-		//				    start_time = ?
-		//				WHERE user_id = ? AND date = ?
-		//				""";
-		//		jdbcTemplate.update(sql, nowTime, userId, today);
 
 		String today = LocalDate.now().toString();
 		String nowTime = LocalTime.now().toString();
 
 		//既に今日のデータがあるかを確認する
-		String selectSql = "SELECT * FROM attendanceData WHERE user_id = ? AND date = ?";
 		AttendanceEntity entity = jdbcTemplate.queryForObject(
-			    "SELECT * FROM attendanceData WHERE user_id = ? AND date = ?",
-			    new BeanPropertyRowMapper<>(AttendanceEntity.class),
-			    userId, today
-			);
+				"SELECT * FROM attendanceData WHERE user_id = ? AND date = ?",
+				new BeanPropertyRowMapper<>(AttendanceEntity.class),
+				userId, today);
 
-		if (entity != null ) {
+		if (entity != null) {
 			//あるならUPDATE
 			String updateSql = """
 					UPDATE attendanceData
@@ -81,11 +68,11 @@ public class AttendanceDao {
 
 		//出勤中のデータを取得
 		String selectSql = """
-				    SELECT * FROM attendanceData
-				   	WHERE user_id = ? AND status = '出勤中'
-					""";
+				   SELECT * FROM attendanceData
+				  	WHERE user_id = ? AND status = '出勤中'
+				""";
 		List<Map<String, Object>> list = jdbcTemplate.queryForList(selectSql, userId);
-		
+
 		if (list.isEmpty()) {
 			System.out.println("出勤中のデータがありません");
 			return;
@@ -95,10 +82,10 @@ public class AttendanceDao {
 		int attendanceId = (int) attendance.get("attendance_id");
 		Time startTimeSql = (Time) attendance.get("start_time");
 		LocalTime startTime = startTimeSql.toLocalTime();
-		
+
 		LocalTime endTime = LocalTime.now();
 
-		 //勤務時間計算
+		//勤務時間計算
 		Duration duration = Duration.between(startTime, endTime);
 		long hours = duration.toHours();
 		long minutes = duration.toMinutesPart();
