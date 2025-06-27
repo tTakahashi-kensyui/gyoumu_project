@@ -66,6 +66,15 @@
 <body>
   <div class="container">
     <h1>💰会計管理画面 </h1>
+	<div class="form-group">
+	  <label for="storeSelect">店舗を選択：</label>
+	  <select id="storeSelect" class="btn">
+	    <option value="松戸">松戸</option>
+	    <option value="市川">市川</option>
+	    <option value="浦安">浦安</option>
+	  </select>
+	</div>
+
 	<h2>🍜店舗売上</h2>
     <table id="salesTable">
       <thead>
@@ -192,7 +201,10 @@
 	  const confirmResult = confirm("本社にデータを転送します。よろしいですか？");
 	  if (!confirmResult) return;
 
-	  const shopSales = [];
+	  const storeName = document.getElementById("storeSelect").value; // ← 店舗名を取得
+	  const sales = [];
+
+	  // 店舗売上
 	  document.querySelectorAll('#salesBody tr').forEach(row => {
 	    const date = row.cells[0].querySelector('input').value;
 	    const name = row.cells[1].querySelector('input').value;
@@ -201,11 +213,11 @@
 	    const subtotal = row.cells[4].querySelector('input').value;
 
 	    if (date && name && qty && price && subtotal) {
-	      shopSales.push({ date, name, qty, price, subtotal });
+	      sales.push({ store: storeName, date, name, qty, price, subtotal }); // ← 店舗名を保存
 	    }
 	  });
 
-	  const mujinSales = [];
+	  // 無人販売（mujinBody）も同様に含める場合
 	  document.querySelectorAll('#mujinBody tr').forEach(row => {
 	    const date = row.cells[0].querySelector('input').value;
 	    const name = row.cells[1].querySelector('input').value;
@@ -214,15 +226,23 @@
 	    const subtotal = row.cells[4].querySelector('input').value;
 
 	    if (date && name && qty && price && subtotal) {
-	      mujinSales.push({ date, name, qty, price, subtotal });
+	      sales.push({ store: storeName, date, name, qty, price, subtotal });
 	    }
 	  });
 
-	  localStorage.setItem("salesList_shop", JSON.stringify(shopSales));
-	  localStorage.setItem("salesList_mujin", JSON.stringify(mujinSales));
-
+	  // 店舗名ごとに保存
+	  localStorage.setItem(`salesList_${storeName}`, JSON.stringify(sales));
 
 	  alert("本社に転送しました！");
+
+	  // 入力フォームクリア処理（今まで通り）
+	  document.getElementById('salesBody').innerHTML = '';
+	  document.getElementById('mujinBody').innerHTML = '';
+	  document.getElementById('totalAmount').value = '';
+	  document.getElementById('carryOver').value = '';
+	  document.getElementById('finalAmount').value = '';
+	  document.getElementById('nextDayFund').value = '';
+	}
 
 	  // 入力をすべてクリア
 	  document.getElementById('salesBody').innerHTML = '';
@@ -231,7 +251,6 @@
 	  document.getElementById('carryOver').value = '';
 	  document.getElementById('finalAmount').value = '';
 	  document.getElementById('nextDayFund').value = '';
-	}
 
 
     document.getElementById("carryOver").addEventListener("input", updateTotal);
