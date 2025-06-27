@@ -22,6 +22,7 @@ public class AttendanceController {
 	public String showAttendanceList(Model model) {
 	    List<AttendanceWithUserEntity> list = attendanceDao.findAttendanceWithUser();
 	    model.addAttribute("attendanceList", list);
+		model.addAttribute("title", "出退勤管理");
 	    return "attendance/attendance";
 	}
 	
