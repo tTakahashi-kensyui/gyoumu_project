@@ -25,11 +25,15 @@ public class MenuController {
 	    public String showLoginPage() {
 	        return "kaikei/login"; // login.htmlがtemplates内に必要です
 	    }
+	    
 	@RequestMapping("/hattyuu")
 	public String hatyuu(Model model) {
 		return "hattyuu/hattyuu";
 	}
-	
+	@RequestMapping("/honbu")
+	public String honbu(Model model) {
+		return "hattyuu/honbu";
+	}
 	
 	 @RequestMapping("/home")
 	    public String showHomePage() {
