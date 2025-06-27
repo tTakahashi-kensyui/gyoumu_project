@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>本部用 発注管理画面（文房具発注フォーム付き）</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #fdfaf6;
+      color: #333;
+    }
+
+    h1, h2 {
+      color: #d35400;
+      border-bottom: 2px solid #f39c12;
+      padding-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background-color: #fff;
+    }
+
+    th, td {
+      border: 1px solid #f0cba7;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8c471;
+      color: #4d2600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fffaf0;
+    }
+
+    form {
+      margin: 20px 0;
+    }
+
+    input[type="text"], input[type="number"] {
+      margin: 5px;
+      padding: 5px;
+    }
+
+    .btn {
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 5px 20px 0;
+    }
+
+    .btn:hover {
+      background-color: #d35400;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: white;
+      background-color: #e67e22;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    .back-link:hover {
+      background-color: #d35400;
+    }
+  </style>
+</head>
+<body>
+  <h1>🏢 本部管理画面</h1>
+
+  <!-- 🍜 食品の発注一覧 -->
+  <h2>🍜 食品の発注一覧</h2>
+  <table id="orderTableFood">
+    <thead>
+      <tr>
+        <th>店舗名</th>
+        <th>発注日時</th>
+        <th>品目</th>
+        <th>数量</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>浦安店</td><td>2025-06-27 09:00</td><td>麺</td><td>30</td></tr>
+      <tr><td>浦安店</td><td>2025-06-27 09:00</td><td>スープ</td><td>20</td></tr>
+      <tr><td>松戸店</td><td>2025-06-27 10:15</td><td>チャーシュー</td><td>15</td></tr>
+    </tbody>
+  </table>
+  <button id="sendFoodFax" class="btn">FAX形式で発注書を作成（食品）</button>
+
+  <!-- ✏️ 文房具の発注フォーム（本社入力） -->
+  <h2>✏️ 事務用品の発注（本社入力）</h2>
+  <form id="stationeryForm">
+    <input type="text" id="itemName" placeholder="品目名（例：ホッチキス）" required />
+    <input type="number" id="itemQty" placeholder="数量（例：10）" required />
+    <button type="submit" class="btn"> 発注を追加</button>
+  </form>
+
+  <!-- 文房具の発注一覧 -->
+  <table id="orderTableStationery">
+    <thead>
+      <tr>
+        <th>発注日時</th>
+        <th>品目</th>
+        <th>数量</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- JSで追加される -->
+    </tbody>
+  </table>
+  <button id="sendStationeryFax" class="btn">FAX形式で発注書を作成（事務用品）</button>
+
+  <p><a href="/" class="back-link">メニューに戻る</a></p>
+
+  <script>
+    // 事務用品発注フォームの処理
+    document.getElementById("stationeryForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const item = document.getElementById("itemName").value.trim();
+      const qty = document.getElementById("itemQty").value;
+      if (!item || qty <= 0) {
+        return; // 必須チェックはブラウザのrequiredで十分
+      }
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString("ja-JP");
+      const timeStr = now.toLocaleTimeString("ja-JP", { hour: '2-digit', minute: '2-digit' });
+
+      const tbody = document.querySelector("#orderTableStationery tbody");
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${dateStr} ${timeStr}</td>
+        <td>${item}</td>
+        <td>${qty}</td>
+        <td><button class="btn" onclick="this.closest('tr').remove()">🗑 削除</button></td>
+      `;
+      tbody.prepend(tr);
+
+      this.reset();
+    });
+
+    // FAX形式で送信（食品）
+    document.getElementById("sendFoodFax").addEventListener("click", () => {
+      // 発注一覧のtbodyの行を全部消す
+      const tbodyFood = document.querySelector("#orderTableFood tbody");
+      tbodyFood.innerHTML = "";
+      alert("完了しました");
+    });
+
+    // FAX形式で送信（文房具）
+    document.getElementById("sendStationeryFax").addEventListener("click", () => {
+      const tbodyStationery = document.querySelector("#orderTableStationery tbody");
+      tbodyStationery.innerHTML = "";
+      alert("完了しました");
+    });
+  </script>
+</body>
+</html>
