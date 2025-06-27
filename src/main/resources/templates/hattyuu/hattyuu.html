@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>ラーメン屋 個別発注システム</title>
-   <style>
+  <title>発注システム</title>
+  <style>
     body {
       font-family: "Segoe UI", sans-serif;
       max-width: 900px;
@@ -49,7 +49,7 @@
       margin-bottom: 30px;
     }
 
-    input, button {
+    input, button, select {
       padding: 8px;
       margin: 5px 0;
       width: 100%;
@@ -90,29 +90,40 @@
     .log-entry:last-child {
       border-bottom: none;
     }
-	
-	a, p a {
-				display: inline-block;
-				margin: 10px 0;
-				color: white;
-				background-color: #e67e22;
-				padding: 10px 20px;
-				text-decoration: none;
-				border-radius: 6px;
-				font-weight: bold;
-				transition: background-color 0.3s ease;
-			}
 
-			a:hover, p a:hover {
-				background-color: #d35400;
-			}
+    a, p a {
+      display: inline-block;
+      margin: 10px 0;
+      color: white;
+      background-color: #e67e22;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
 
-			
+    a:hover, p a:hover {
+      background-color: #d35400;
+    }
+
+    #storeSelect {
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>🍜 ラーメン屋 発注システム</h1>
+  <h1>🍜発注システム</h1>
+
+  <!-- 店舗選択 -->
+  <label for="storeSelect">店舗を選択：</label>
+  <select id="storeSelect" required>
+    <option value="">-- 店舗を選んでください --</option>
+    <option value="市川店">市川店</option>
+    <option value="浦安店">浦安店</option>
+    <option value="松戸店">松戸店</option>
+  </select>
 
   <h2>🔸 固定品目</h2>
   <table id="fixedTable">
@@ -141,19 +152,6 @@
     <button type="submit">選択</button>
   </form>
 
-  <table id="customTable">
-    <thead>
-<!--      <tr>-->
-<!--        <th>品目</th>-->
-<!--        <th>発注数</th>-->
-<!--        <th>操作</th>-->
-<!--      </tr>-->
-    </thead>
-    <tbody>
-      <!-- 追加された品目がここに入る -->
-    </tbody>
-  </table>
-
   <div id="orderLog">
     <h2>📋 選択された発注</h2>
     <div id="logList">
@@ -162,13 +160,20 @@
     <button id="sendToHQ">📨 本部へ送信</button>
   </div>
 
+  <p><a href="/" th:href="@{/}">メニューに戻る</a></p>
+
   <script>
+    const storeSelect = document.getElementById("storeSelect");
     const customForm = document.getElementById("customForm");
-    const customTableBody = document.querySelector("#customTable tbody");
     const logList = document.getElementById("logList");
 
-    // 発注ログを作成し表示する関数
     function logOrder(name, qty) {
+      const store = storeSelect.value;
+      if (!store) {
+        alert("店舗を選択してください。");
+        return;
+      }
+
       const now = new Date();
       const dateStr = now.toLocaleDateString("ja-JP");
       const timeStr = now.toLocaleTimeString("ja-JP", { hour: '2-digit', minute: '2-digit' });
@@ -177,7 +182,7 @@
       entry.className = "log-entry";
 
       const text = document.createElement("span");
-      text.textContent = `【${dateStr} ${timeStr}】「${name}」を ${qty} 個 選択しました。`;
+      text.textContent = `【${store}／${dateStr} ${timeStr}】「${name}」を ${qty} 個 選択しました。`;
 
       const cancelBtn = document.createElement("button");
       cancelBtn.textContent = "取消";
@@ -192,7 +197,6 @@
       logList.prepend(entry);
     }
 
-    // 固定品目の発注ボタン
     document.querySelectorAll("#fixedTable .order-btn").forEach(button => {
       button.addEventListener("click", function () {
         const row = this.closest("tr");
@@ -206,7 +210,6 @@
       });
     });
 
-    // 自由入力フォームの送信処理
     customForm.addEventListener("submit", function (event) {
       event.preventDefault();
 
@@ -214,25 +217,19 @@
       const qty = document.getElementById("customQty").value;
 
       if (name && qty > 0) {
-       
-        // 発注履歴に記録
         logOrder(name, qty);
-customForm.reset();
-  } else {
-    alert("品目名と発注数を入力してください。");
-  }
-        
-        });
+        customForm.reset();
+      } else {
+        alert("品目名と発注数を入力してください。");
+      }
+    });
 
-
-    // 本部へ送信ボタン
     document.getElementById("sendToHQ").addEventListener("click", function () {
-      if (confirm("これまでの発注履歴を本部へ送信しますか？")) {
+      if (confirm("これまでの発注情報を本部へ送信しますか？")) {
         logList.innerHTML = "";
-        alert("発注は本部に送信されました。");
+        alert("発注情報は本部に送信されました。");
       }
     });
   </script>
-  <p><a th:href="@{/}">メニューに戻る</a></p>
 </body>
 </html>
