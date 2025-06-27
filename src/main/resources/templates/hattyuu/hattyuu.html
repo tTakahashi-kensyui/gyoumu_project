@@ -90,6 +90,24 @@
     .log-entry:last-child {
       border-bottom: none;
     }
+	
+	a, p a {
+				display: inline-block;
+				margin: 10px 0;
+				color: white;
+				background-color: #e67e22;
+				padding: 10px 20px;
+				text-decoration: none;
+				border-radius: 6px;
+				font-weight: bold;
+				transition: background-color 0.3s ease;
+			}
+
+			a:hover, p a:hover {
+				background-color: #d35400;
+			}
+
+			
   </style>
 </head>
 <body>
@@ -106,13 +124,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>麺</td><td><input type="number" value="30"></td><td><button class="order-btn">発注</button></td></tr>
-      <tr><td>スープ</td><td><input type="number" value="20"></td><td><button class="order-btn">発注</button></td></tr>
-      <tr><td>チャーシュー</td><td><input type="number" value="15"></td><td><button class="order-btn">発注</button></td></tr>
-      <tr><td>メンマ</td><td><input type="number" value="10"></td><td><button class="order-btn">発注</button></td></tr>
-      <tr><td>のり</td><td><input type="number" value="10"></td><td><button class="order-btn">発注</button></td></tr>
-      <tr><td>ネギ</td><td><input type="number" value="12"></td><td><button class="order-btn">発注</button></td></tr>
-      <tr><td>玉子</td><td><input type="number" value="18"></td><td><button class="order-btn">発注</button></td></tr>
+      <tr><td>麺</td><td><input type="number" value="30"></td><td><button class="order-btn">選択</button></td></tr>
+      <tr><td>スープ</td><td><input type="number" value="20"></td><td><button class="order-btn">選択</button></td></tr>
+      <tr><td>チャーシュー</td><td><input type="number" value="15"></td><td><button class="order-btn">選択</button></td></tr>
+      <tr><td>メンマ</td><td><input type="number" value="10"></td><td><button class="order-btn">選択</button></td></tr>
+      <tr><td>のり</td><td><input type="number" value="10"></td><td><button class="order-btn">選択</button></td></tr>
+      <tr><td>ネギ</td><td><input type="number" value="12"></td><td><button class="order-btn">選択</button></td></tr>
+      <tr><td>玉子</td><td><input type="number" value="18"></td><td><button class="order-btn">選択</button></td></tr>
     </tbody>
   </table>
 
@@ -120,16 +138,16 @@
   <form id="customForm">
     <input type="text" id="customName" placeholder="品目名（例：ティッシュ）" required>
     <input type="number" id="customQty" placeholder="発注数（例：5）" required>
-    <button type="submit">発注</button>
+    <button type="submit">選択</button>
   </form>
 
   <table id="customTable">
     <thead>
-      <tr>
-        <th>品目</th>
-        <th>発注数</th>
-        <th>操作</th>
-      </tr>
+<!--      <tr>-->
+<!--        <th>品目</th>-->
+<!--        <th>発注数</th>-->
+<!--        <th>操作</th>-->
+<!--      </tr>-->
     </thead>
     <tbody>
       <!-- 追加された品目がここに入る -->
@@ -137,7 +155,7 @@
   </table>
 
   <div id="orderLog">
-    <h2>📋 発注履歴</h2>
+    <h2>📋 選択された発注</h2>
     <div id="logList">
       <!-- 発注ログがここに表示される -->
     </div>
@@ -159,7 +177,7 @@
       entry.className = "log-entry";
 
       const text = document.createElement("span");
-      text.textContent = `【${dateStr} ${timeStr}】「${name}」を ${qty} 個 発注しました。`;
+      text.textContent = `【${dateStr} ${timeStr}】「${name}」を ${qty} 個 選択しました。`;
 
       const cancelBtn = document.createElement("button");
       cancelBtn.textContent = "取消";
@@ -206,7 +224,6 @@ customForm.reset();
         
         });
 
-    
 
     // 本部へ送信ボタン
     document.getElementById("sendToHQ").addEventListener("click", function () {
@@ -216,6 +233,6 @@ customForm.reset();
       }
     });
   </script>
-
+  <p><a th:href="@{/}">メニューに戻る</a></p>
 </body>
 </html>
