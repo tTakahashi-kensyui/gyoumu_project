@@ -33,15 +33,15 @@ public class FaceController {
         return "face/attendance";
     }
 
-    @PostMapping("/attendance/start")
-    public String registerStart() {
-        return "redirect:/face/complete?type=start";
-    }
-
-    @PostMapping("/attendance/end")
-    public String registerEnd() {
-        return "redirect:/face/complete?type=end";
-    }
+//    @PostMapping("/attendance/start")
+//    public String registerStart() {
+//        return "redirect:/face/complete?type=start";
+//    }
+//
+//    @PostMapping("/attendance/end")
+//    public String registerEnd() {
+//        return "redirect:/face/complete?type=end";
+//    }
 
     @GetMapping("/complete")
     public String showCompletePage(@RequestParam String type, Model model) {
