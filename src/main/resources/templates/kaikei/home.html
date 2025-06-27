@@ -65,18 +65,19 @@
 </head>
 <body>
   <div class="container">
-    <h1>💰会計管理画面 </h1>
-	<div class="form-group">
-	  <label for="storeSelect">店舗を選択：</label>
-	  <select id="storeSelect" class="btn">
-	    <option value="松戸">松戸</option>
-	    <option value="市川">市川</option>
-	    <option value="浦安">浦安</option>
-	  </select>
-	</div>
+    <h1>💰会計管理画面</h1>
 
-	<h2>🍜店舗売上</h2>
-    <table id="salesTable">
+    <div class="form-group">
+      <label for="storeSelect">店舗を選択：</label>
+      <select id="storeSelect" class="btn">
+        <option value="松戸">松戸店</option>
+        <option value="市川">市川店</option>
+        <option value="浦安">浦安店</option>
+      </select>
+    </div>
+
+    <h2>🍜 店舗売上</h2>
+    <table>
       <thead>
         <tr>
           <th>日付</th>
@@ -88,44 +89,28 @@
         </tr>
       </thead>
       <tbody id="salesBody">
-        <tr>
-          <td><input type="date"></td>
-          <td><input type="text"></td>
-          <td><input type="number" min="0" oninput="updateSubtotal(this)"></td>
-          <td><input type="number" min="0" oninput="updateSubtotal(this)"></td>
-          <td><input type="number" readonly></td>
-          <td><button type="button" class="btn" onclick="deleteRow(this)">削除</button></td>
-        </tr>
+        <!-- 初期行自動で追加 -->
       </tbody>
     </table>
-	<button class="btn" onclick="addRow()">＋ 行を追加</button>
+    <button class="btn" onclick="addRow('salesBody')">＋ 行を追加（店舗）</button>
 
-	<h2>📦 無人販売 売上</h2>
-	   <table id="salesTable">
-	     <thead>
-	       <tr>
-	         <th>日付</th>
-	         <th>商品名</th>
-	         <th>数量</th>
-	         <th>単価</th>
-	         <th>小計</th>
-	         <th>操作</th>
-	       </tr>
-	     </thead>
-		 <tbody id="mujinBody">
-	       <tr>
-	         <td><input type="date"></td>
-	         <td><input type="text"></td>
-	         <td><input type="number" min="0" oninput="updateSubtotal(this)"></td>
-	         <td><input type="number" min="0" oninput="updateSubtotal(this)"></td>
-	         <td><input type="number" readonly></td>
-	         <td><button class="btn" onclick="deleteRow(this)">削除</button></td>
-	       </tr>
-	     </tbody>
-	   </table>
-
-	  
-    <button type="button" class="btn" onclick="addRow()">＋ 行を追加</button>
+    <h2>📦 無人販売売上</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>日付</th>
+          <th>商品名</th>
+          <th>数量</th>
+          <th>単価</th>
+          <th>小計</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="mujinBody">
+        <!-- 初期行自動で追加 -->
+      </tbody>
+    </table>
+    <button class="btn" onclick="addRow('mujinBody')">＋ 行を追加（無人販売）</button>
 
     <div class="form-group">
       <label>合計金額：</label>
@@ -144,41 +129,13 @@
       <input type="number" id="nextDayFund">
     </div>
 
-	
-    <!-- 会計士に転送 -->
-    <button type="button" class="btn" onclick="transferData()">📤本社に転送 </button>
-	<a class="btn" th:href="@{/login}">← ログイン画面に戻る</a>
-
-	
+    <button type="button" class="btn" onclick="transferData()">📤 本社に転送</button>
+    <a class="btn" th:href="@{/login}">← ログイン画面に戻る</a>
   </div>
 
   <script>
-    function updateSubtotal(input) {
-      const row = input.closest('tr');
-      const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
-      const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
-      row.cells[4].querySelector('input').value = (qty * price).toFixed(2);
-      updateTotal();
-    }
-
-    function updateTotal() {
-      let total = 0;
-      document.querySelectorAll('#salesBody tr').forEach(row => {
-        const val = parseFloat(row.cells[4].querySelector('input').value) || 0;
-        total += val;
-      });
-	  document.querySelectorAll('#mujinBody tr').forEach(row => {
-	      const val = parseFloat(row.cells[4].querySelector('input').value) || 0;
-	      total += val;
-	    });
-      document.getElementById('totalAmount').value = total.toFixed(2);
-
-   //   const carryOver = parseFloat(document.getElementById('carryOver').value) || 0;
-     // document.getElementById('finalAmount').value = (total + carryOver).toFixed(2);
-    }
-
-    function addRow() {
-      const tbody = document.getElementById('salesBody');
+    function addRow(targetId) {
+      const tbody = document.getElementById(targetId);
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><input type="date"></td>
@@ -197,66 +154,73 @@
       updateTotal();
     }
 
-	function transferData() {
-	  const confirmResult = confirm("本社にデータを転送します。よろしいですか？");
-	  if (!confirmResult) return;
+    function updateSubtotal(input) {
+      const row = input.closest('tr');
+      const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
+      const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
+      row.cells[4].querySelector('input').value = (qty * price).toFixed(2);
+      updateTotal();
+    }
 
-	  const storeName = document.getElementById("storeSelect").value; // ← 店舗名を取得
-	  const sales = [];
+    function updateTotal() {
+      let total = 0;
+      document.querySelectorAll('#salesBody tr, #mujinBody tr').forEach(row => {
+        const val = parseFloat(row.cells[4].querySelector('input').value) || 0;
+        total += val;
+      });
+      document.getElementById('totalAmount').value = total.toFixed(2);
+    }
 
-	  // 店舗売上
-	  document.querySelectorAll('#salesBody tr').forEach(row => {
-	    const date = row.cells[0].querySelector('input').value;
-	    const name = row.cells[1].querySelector('input').value;
-	    const qty = row.cells[2].querySelector('input').value;
-	    const price = row.cells[3].querySelector('input').value;
-	    const subtotal = row.cells[4].querySelector('input').value;
+    function transferData() {
+      const confirmResult = confirm("本社にデータを転送します。よろしいですか？");
+      if (!confirmResult) return;
 
-	    if (date && name && qty && price && subtotal) {
-	      sales.push({ store: storeName, date, name, qty, price, subtotal }); // ← 店舗名を保存
-	    }
-	  });
+      const storeName = document.getElementById("storeSelect").value;
+      const sales = [];
 
-	  // 無人販売（mujinBody）も同様に含める場合
-	  document.querySelectorAll('#mujinBody tr').forEach(row => {
-	    const date = row.cells[0].querySelector('input').value;
-	    const name = row.cells[1].querySelector('input').value;
-	    const qty = row.cells[2].querySelector('input').value;
-	    const price = row.cells[3].querySelector('input').value;
-	    const subtotal = row.cells[4].querySelector('input').value;
+      document.querySelectorAll('#salesBody tr').forEach(row => {
+        const date = row.cells[0].querySelector('input').value;
+        const name = row.cells[1].querySelector('input').value;
+        const qty = row.cells[2].querySelector('input').value;
+        const price = row.cells[3].querySelector('input').value;
+        const subtotal = row.cells[4].querySelector('input').value;
+        if (date && name && qty && price && subtotal) {
+          sales.push({ store: storeName, type: "店舗売上", date, name, qty, price, subtotal });
+        }
+      });
 
-	    if (date && name && qty && price && subtotal) {
-	      sales.push({ store: storeName, date, name, qty, price, subtotal });
-	    }
-	  });
+      document.querySelectorAll('#mujinBody tr').forEach(row => {
+        const date = row.cells[0].querySelector('input').value;
+        const name = row.cells[1].querySelector('input').value;
+        const qty = row.cells[2].querySelector('input').value;
+        const price = row.cells[3].querySelector('input').value;
+        const subtotal = row.cells[4].querySelector('input').value;
+        if (date && name && qty && price && subtotal) {
+          sales.push({ store: storeName, type: "無人販売", date, name, qty, price, subtotal });
+        }
+      });
 
-	  // 店舗名ごとに保存
-	  localStorage.setItem(`salesList_${storeName}`, JSON.stringify(sales));
+      localStorage.setItem(`salesList_${storeName}`, JSON.stringify(sales));
+      alert("本社に転送しました！");
 
-	  alert("本社に転送しました！");
+      // 入力を初期化して空行を再生成
+      document.getElementById('salesBody').innerHTML = '';
+      document.getElementById('mujinBody').innerHTML = '';
+      addRow('salesBody');
+      addRow('mujinBody');
 
-	  // 入力フォームクリア処理（今まで通り）
-	  document.getElementById('salesBody').innerHTML = '';
-	  document.getElementById('mujinBody').innerHTML = '';
-	  document.getElementById('totalAmount').value = '';
-	  document.getElementById('carryOver').value = '';
-	  document.getElementById('finalAmount').value = '';
-	  document.getElementById('nextDayFund').value = '';
-	}
+      document.getElementById('totalAmount').value = '';
+      document.getElementById('carryOver').value = '';
+      document.getElementById('finalAmount').value = '';
+      document.getElementById('nextDayFund').value = '';
+    }
 
-	  // 入力をすべてクリア
-	  document.getElementById('salesBody').innerHTML = '';
-	  document.getElementById('mujinBody').innerHTML = '';
-	  document.getElementById('totalAmount').value = '';
-	  document.getElementById('carryOver').value = '';
-	  document.getElementById('finalAmount').value = '';
-	  document.getElementById('nextDayFund').value = '';
-
-
-    document.getElementById("carryOver").addEventListener("input", updateTotal);
+    // 初期化：画面表示時に1行ずつ表示
+    window.onload = () => {
+      addRow('salesBody');
+      addRow('mujinBody');
+      document.getElementById("carryOver").addEventListener("input", updateTotal);
+    };
   </script>
 </body>
 </html>
-
-
-

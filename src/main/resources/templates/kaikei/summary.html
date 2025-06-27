@@ -73,12 +73,12 @@
 </head>
 <body>
   <div class="container">
-    <h1>売上概要ページ</h1>
+    <h1>売上一覧ページ</h1>
 
     <table id="summaryTable">
       <thead>
         <tr>
-          <th>種別</th>
+          <th>店舗名</th>
           <th>日付</th>
           <th>商品名</th>
           <th>数量</th>
@@ -100,9 +100,9 @@
     <div class="chart-container">
       <canvas id="salesChart"></canvas>
     </div>
-	<button type="button" class="btn" onclick="transferToAccountant()">📤会計士に転送 </button>
 
-	<button type="button" class="btn" onclick="transferData()">会計データの確認 </button>
+    <button type="button" class="btn" onclick="transferToAccountant()">📤会計士に転送</button>
+	<button type="button" class="btn">会計データを確認</button>
     <a class="btn" th:href="@{/login}">← ログイン画面に戻る</a>
   </div>
 
@@ -112,7 +112,7 @@
       const tbody = document.getElementById('summaryBody');
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td><input type="text" value="店舗売上" readonly></td>
+        <td><input type="text" placeholder="松戸・市川・浦安など"></td>
         <td><input type="date"></td>
         <td><input type="text"></td>
         <td><input type="number" min="0" oninput="updateSubtotal(this)"></td>
@@ -148,20 +148,27 @@
       document.getElementById('totalAmount').textContent = total.toFixed(2);
     }
 
+    function getColorForStore(storeName) {
+      const hash = Array.from(storeName).reduce((acc, c) => acc + c.charCodeAt(0), 0);
+      const hue = hash % 360;
+      return `hsl(${hue}, 70%, 60%)`;
+    }
+
     function updateChart() {
-      const labels = [];
-      const data = [];
+      const storeTotals = {};
       document.querySelectorAll('#summaryBody tr').forEach(row => {
-        const name = row.cells[2].querySelector('input').value;
-        const val = parseFloat(row.cells[5].querySelector('input').value) || 0;
-        if (name) {
-          labels.push(name);
-          data.push(val);
-        }
+        const store = row.cells[0].querySelector('input').value || "不明店舗";
+        const subtotal = parseFloat(row.cells[5].querySelector('input').value) || 0;
+        storeTotals[store] = (storeTotals[store] || 0) + subtotal;
       });
+
+      const labels = Object.keys(storeTotals);
+      const data = Object.values(storeTotals);
+      const backgroundColors = labels.map(getColorForStore);
 
       salesChart.data.labels = labels;
       salesChart.data.datasets[0].data = data;
+      salesChart.data.datasets[0].backgroundColor = backgroundColors;
       salesChart.update();
     }
 
@@ -171,28 +178,28 @@
       data: {
         labels: [],
         datasets: [{
-          label: '売上 (円)',
-          backgroundColor: '#ffb366',
-          borderColor: '#ff7a00',
-          data: []
+          label: '店舗別売上合計 (円)',
+          data: [],
+          backgroundColor: []
         }]
       },
       options: {
         responsive: true,
-        plugins: { legend: { display: false } },
+        plugins: { legend: { display: true } },
         scales: { y: { beginAtZero: true } }
       }
     });
 
-    // 初期表示でlocalStorageからデータを読み込み
     window.onload = function () {
       const tbody = document.getElementById("summaryBody");
 
-      function renderSales(data, typeLabel) {
+      function renderSales(data) {
         data.forEach(item => {
+          if (item.type === '無人販売') return; // ← 無人販売を除外
+
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td><input type="text" value="${typeLabel}" readonly></td>
+            <td><input type="text" value="${item.store}" readonly></td>
             <td><input type="date" value="${item.date}" readonly></td>
             <td><input type="text" value="${item.name}" readonly></td>
             <td><input type="number" value="${item.qty}" readonly></td>
@@ -204,47 +211,46 @@
         });
       }
 
-      const shopSales = JSON.parse(localStorage.getItem("salesList_shop") || "[]");
-      const mujinSales = JSON.parse(localStorage.getItem("salesList_mujin") || "[]");
-
-      renderSales(shopSales, "店舗売上");
-      renderSales(mujinSales, "無人販売");
+      const stores = ["松戸", "市川", "浦安"];
+      stores.forEach(store => {
+        const data = JSON.parse(localStorage.getItem(`salesList_${store}`) || "[]");
+        renderSales(data);
+      });
 
       updateTotal();
       updateChart();
     };
-	
-	function transferToAccountant() {
-	    const confirmSend = confirm("会計士にデータを転送します。よろしいですか？");
-	    if (!confirmSend) return;
 
-	    const data = [];
+    function transferToAccountant() {
+      if (!confirm("会計士にデータを転送します。よろしいですか？")) return;
 
-	    document.querySelectorAll('#summaryBody tr').forEach(row => {
-	      const type = row.cells[0].querySelector('input').value;
-	      const date = row.cells[1].querySelector('input').value;
-	      const name = row.cells[2].querySelector('input').value;
-	      const qty = row.cells[3].querySelector('input').value;
-	      const price = row.cells[4].querySelector('input').value;
-	      const subtotal = row.cells[5].querySelector('input').value;
+      const data = [];
 
-	      if (date && name && qty && price && subtotal) {
-	        data.push({ type, date, name, qty, price, subtotal });
-	      }
-	    });
+      document.querySelectorAll('#summaryBody tr').forEach(row => {
+        const store = row.cells[0].querySelector('input').value;
+        const date = row.cells[1].querySelector('input').value;
+        const name = row.cells[2].querySelector('input').value;
+        const qty = row.cells[3].querySelector('input').value;
+        const price = row.cells[4].querySelector('input').value;
+        const subtotal = row.cells[5].querySelector('input').value;
 
-	    localStorage.setItem("summaryData", JSON.stringify(data));
-	    alert("会計士に転送しました！");
+        if (store && date && name && qty && price && subtotal) {
+          data.push({ store, date, name, qty, price, subtotal });
+        }
+      });
 
-	    // 表示を初期化
-	    document.getElementById("summaryBody").innerHTML = "";
-	    document.getElementById("totalAmount").textContent = "0";
-	    salesChart.data.labels = [];
-	    salesChart.data.datasets[0].data = [];
-	    salesChart.update();
-	  }
+      localStorage.setItem("summaryData", JSON.stringify(data));
+      alert("会計士に転送しました！");
+
+      // 転送後 localStorage のデータを削除
+      ["松戸", "市川", "浦安"].forEach(store =>
+        localStorage.removeItem(`salesList_${store}`)
+      );
+      localStorage.removeItem("summaryData");
+
+      // ページリロードで表を初期化
+      location.reload();
+    }
   </script>
 </body>
 </html>
-
-
