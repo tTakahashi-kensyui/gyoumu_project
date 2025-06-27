@@ -19,10 +19,10 @@ public class FaceAttendanceController {
 		attendanceDao.startAttendance(userId);
 		 return "redirect:/face/complete?type=start";
 	}
-	@PostMapping("fase/attendance/end")
+	@PostMapping("/face/attendance/end")
 	public String faceEndAttendance() {
 		int userId = 1;
-		attendanceDao.startAttendance(userId);
+		attendanceDao.endAttendance(userId);
 		 return "redirect:/face/complete?type=end";
 	}
 }
