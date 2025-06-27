@@ -22,7 +22,7 @@ public class AttendanceController {
 	public String showAttendanceList(Model model) {
 	    List<AttendanceWithUserEntity> list = attendanceDao.findAttendanceWithUser();
 	    model.addAttribute("attendanceList", list);
-		model.addAttribute("title", "出退勤管理");
+		model.addAttribute("title", "出退勤記録");
 	    return "attendance/attendance";
 	}
 	
@@ -48,7 +48,4 @@ public class AttendanceController {
 		attendanceDao.endAttendance(userId);
 		return "redirect:/attendance";
 	}
-	
-	
-	
 }

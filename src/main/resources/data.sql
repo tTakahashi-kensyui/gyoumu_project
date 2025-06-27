@@ -14,7 +14,18 @@ INSERT INTO attendanceData (attendance_id, user_id, date, start_time, end_time, 
 VALUES 
 (1, 1, CURRENT_DATE, NULL, NULL, 0, NULL, '未出勤', NULL),
 (2, 2, CURRENT_DATE, '09:00:00', NULL, 0, NULL, '出勤中', NULL),
-(3, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL);
+(3, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(4, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(5, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(6, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(7, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(8, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(9, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(10, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(11, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(12, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL),
+(13, 4, CURRENT_DATE, CURRENT_TIME, NULL, 0, NULL, '出勤中', NULL);
+
 
 -- シフトデータ
 INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (1,'2025-07-01','午前','希望');
