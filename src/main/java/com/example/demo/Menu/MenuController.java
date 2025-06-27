@@ -24,8 +24,14 @@ public class MenuController {
 	public String hatyuu(Model model) {
 		return "hattyuu/hattyuu";
 	}
-	@RequestMapping("/home")
-	public String kaikei(Model model) {
-		return "kaikei/home";
-	}
+	
+	 @RequestMapping("/home")
+	    public String showHomePage() {
+	        return "kaikei/home";  // home.html を表示
+	    }
+
+	    @RequestMapping("/summary")
+	    public String showSummaryPage() {
+	        return "kaikei/summary";  // summary.html を表示
+	    }
 }
