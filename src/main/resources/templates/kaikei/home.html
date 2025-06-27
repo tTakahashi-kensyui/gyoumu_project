@@ -52,6 +52,7 @@
       text-decoration: none;
       font-size: 16px;
       cursor: pointer;
+      margin-right: 10px;
       margin-top: 10px;
     }
     .btn:hover {
@@ -64,7 +65,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>💰会計管理画面　</h1>
+    <h1>💰会計管理画面</h1>
     <table id="salesTable">
       <thead>
         <tr>
@@ -83,12 +84,12 @@
           <td><input type="number" min="0" oninput="updateSubtotal(this)"></td>
           <td><input type="number" min="0" oninput="updateSubtotal(this)"></td>
           <td><input type="number" readonly></td>
-          <td><button class="btn" onclick="deleteRow(this)">削除</button></td>
+          <td><button type="button" class="btn" onclick="deleteRow(this)">削除</button></td>
         </tr>
       </tbody>
     </table>
 
-    <button class="btn" onclick="addRow()">＋ 行を追加</button>
+    <button type="button" class="btn" onclick="addRow()">＋ 行を追加</button>
 
     <div class="form-group">
       <label>合計金額：</label>
@@ -107,10 +108,12 @@
       <input type="number" id="nextDayFund">
     </div>
 
-<!--   <div>button class="btn" onclick="saveAndGoToSummary()">保存して売上概要へ</button>-->
- 
-	<button class="btn" onclick="saveAndGoToSummary()">保存して売上概要へ</button>
+    <!-- 売上概要へ -->
+    <a th:href="@{/summary}" class="btn">📊売上概要へ　</a>
 
+    <!-- 会計士に転送 -->
+    <button type="button" class="btn" onclick="transferData()">📤会計士に転送 </button>
+  </div>
 
   <script>
     function updateSubtotal(input) {
@@ -128,6 +131,7 @@
         total += val;
       });
       document.getElementById('totalAmount').value = total.toFixed(2);
+
       const carryOver = parseFloat(document.getElementById('carryOver').value) || 0;
       document.getElementById('finalAmount').value = (total + carryOver).toFixed(2);
     }
@@ -141,7 +145,7 @@
         <td><input type="number" min="0" oninput="updateSubtotal(this)"></td>
         <td><input type="number" min="0" oninput="updateSubtotal(this)"></td>
         <td><input type="number" readonly></td>
-        <td><button class="btn" onclick="deleteRow(this)">削除</button></td>
+        <td><button type="button" class="btn" onclick="deleteRow(this)">削除</button></td>
       `;
       tbody.appendChild(row);
     }
@@ -152,23 +156,39 @@
       updateTotal();
     }
 
-    function saveAndGoToSummary() {
-      const sales = [];
-      document.querySelectorAll('#salesBody tr').forEach(row => {
-        sales.push({
-          date: row.cells[0].querySelector('input').value,
-          name: row.cells[1].querySelector('input').value,
-          qty: row.cells[2].querySelector('input').value,
-          price: row.cells[3].querySelector('input').value,
-          subtotal: row.cells[4].querySelector('input').value
-        });
-      });
-      localStorage.setItem("salesList", JSON.stringify(sales));
-	  window.location.href = "/summary";
-    }
+	function transferData() {
+	  const confirmResult = confirm("会計士にデータを転送します。よろしいですか？");
+	  if (!confirmResult) return;
+
+	  const sales = [];
+	  document.querySelectorAll('#salesBody tr').forEach(row => {
+	    const date = row.cells[0].querySelector('input').value;
+	    const name = row.cells[1].querySelector('input').value;
+	    const qty = row.cells[2].querySelector('input').value;
+	    const price = row.cells[3].querySelector('input').value;
+	    const subtotal = row.cells[4].querySelector('input').value;
+
+	    if (date && name && qty && price && subtotal) {
+	      sales.push({ date, name, qty, price, subtotal });
+	    }
+	  });
+
+	  localStorage.setItem("salesList", JSON.stringify(sales));
+
+	  alert("会計士に転送しました！");
+
+	  // 入力をすべてクリア
+	  document.getElementById('salesBody').innerHTML = '';
+	  document.getElementById('totalAmount').value = '';
+	  document.getElementById('carryOver').value = '';
+	  document.getElementById('finalAmount').value = '';
+	  document.getElementById('nextDayFund').value = '';
+	}
+
 
     document.getElementById("carryOver").addEventListener("input", updateTotal);
   </script>
 </body>
 </html>
+
 
