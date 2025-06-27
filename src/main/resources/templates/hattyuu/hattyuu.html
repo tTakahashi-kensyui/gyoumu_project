@@ -112,7 +112,7 @@
 </head>
 <body>
 
-  <h1>🍜 ラーメン屋 発注システム</h1>
+  <h1>🍜 発注システム</h1>
 
   <h2>🔸 固定品目</h2>
   <table id="fixedTable">
@@ -227,9 +227,9 @@ customForm.reset();
 
     // 本部へ送信ボタン
     document.getElementById("sendToHQ").addEventListener("click", function () {
-      if (confirm("これまでの発注履歴を本部へ送信しますか？")) {
+      if (confirm("これまでの発注情報を本部へ送信しますか？")) {
         logList.innerHTML = "";
-        alert("発注は本部に送信されました。");
+        alert("発注情報は本部に送信されました。");
       }
     });
   </script>

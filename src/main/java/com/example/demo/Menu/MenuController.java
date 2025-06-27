@@ -24,7 +24,10 @@ public class MenuController {
 	public String hatyuu(Model model) {
 		return "hattyuu/hattyuu";
 	}
-	
+	  @RequestMapping("/login")
+	    public String showLoginPage() {
+	        return "kaikei/login"; // login.htmlがtemplates内に必要です
+	    }
 	 @RequestMapping("/home")
 	    public String showHomePage() {
 	        return "kaikei/home";  // home.html を表示
