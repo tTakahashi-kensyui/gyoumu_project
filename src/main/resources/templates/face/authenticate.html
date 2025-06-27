@@ -3,35 +3,41 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>カメラ表示</title>
+	<title>顔認証登録</title>
+	<link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <div class="container">
-	<h1>カメラ映像</h1>
+	<h1>顔認証</h1>
 	<video id="video" autoplay playsinline width="400"></video>
 	<p id="message"></p>
 	<p id="selected"></p>
 
+	<!--手入力のリンク-->
+	<p id="manualLink" class="hidden">
+		<a th:href="@{/attendance}">手入力で出退勤</a>
+	</p>
+	<p id="topLink" class="hidden">
+			<a th:href="@{/}">トップページに戻る</a>
+	</p>
+	
 	<script>
 		let selectedAction = ''; // デフォルトは出勤
-
 		// キー入力で選択
 		document.addEventListener('keydown', (event) => {
 			const key = event.key;
 			if (key === '1') {
 				selectedAction = 'start';
 
-				document.getElementById('selected').innerText = "選択: 出勤";
 			} else if (key === '2') {
 				selectedAction = 'end';
-		
 
-				document.getElementById('selected').innerText = "選択: 退勤";
 			}
 		});
 
 		// カメラ起動
 		navigator.mediaDevices.getUserMedia({video: true})
 			.then(stream => {
+				document.getElementById('message').innerText = "判定中...";
 				document.getElementById('video').srcObject = stream;
 			})
 			.catch(error => {
@@ -43,25 +49,37 @@
 			
 			fetch('/face/attendance/' + selectedAction, {method: 'POST'})
 				.then(response => {
-					document.getElementById('message').innerText = "判定中...";
+
 					if (response.ok) {
 						if (selectedAction === 'start') {
 							document.getElementById('message').innerText = "✅ 出勤しました";
+							showTopLink();
 						} else if(selectedAction === 'end') {
 							document.getElementById('message').innerText = "✅ 退勤しました";
+							showTopLink();
 						}
 					} else{
 						document.getElementById('message').innerText = "❌ エラーが発生しました";
+						showManualLink();
 					}
 				})
 				.catch(error => {
 					console.error('通信エラー', error);
 					document.getElementById('message').innerText = "❌ 通信エラー";
+					showManualLink();
 				});
 
 		}, 3000);
-	</script>
-	<p><a th:href="@{/attendance}">手入力で出退勤</a></p>
+		
+		// 手入力リンクを表示する関数
+		function showManualLink() {
+			document.getElementById('manualLink').classList.remove('hidden');
+		}
+		function showTopLink() {
+					document.getElementById('topLink').classList.remove('hidden');
+				}
+		</script>
+	
 </div>
 
 </html>
