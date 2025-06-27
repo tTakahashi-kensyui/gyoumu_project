@@ -1,11 +1,11 @@
 package com.example.demo.Face;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Attendance.AttendanceDao;
 
-@RestController
+@Controller
 public class FaceAttendanceController {
 	private final AttendanceDao attendanceDao;
 

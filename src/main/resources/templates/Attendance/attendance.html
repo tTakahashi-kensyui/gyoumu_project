@@ -1,46 +1,49 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="utf-8">
-    <title th:text="${title}"></title>
+	<meta charset="utf-8">
+	<title th:text="${title}"></title>
 	<link rel="stylesheet" th:href="@{/attendanceLayout.css}">
 </head>
+
 <body>
-    <h1 th:text="${title}"></h1>
+	<h1 th:text="${title}"></h1>
 
 	<table border="1">
-	    <tr>
-	        <th>ユーザー名</th>
-	        <th>日付</th>
-	        <th>出勤時間</th>
-	        <th>退勤時間</th>
-	        <th>状態</th>
-	        <th>勤務時間</th>
-	        <th>操作</th>
-	    </tr>
-	    <tr th:each="item : ${attendanceList}">
-	        <td th:text="${item.userName}"></td>
-	        <td th:text="${item.date}"></td>
-	        <td th:text="${item.startTime} ?: '-'"></td>
-	        <td th:text="${item.endTime} ?: '-'"></td>
-	        <td th:text="${item.status}"></td>
-	        <td th:text="${item.workTime} + '時間'"></td>
-	        <td>
-	            <form th:action="@{/attendance/start}" method="post">
-	                <input type="hidden" name="userId" th:value="${item.userId}" />
-	                <button type="submit">出勤</button>
-	            </form>
+		<tr>
+			<th>ユーザー名</th>
+			<th>日付</th>
+			<th>出勤時間</th>
+			<th>退勤時間</th>
+			<th>状態</th>
+			<th>勤務時間</th>
+			<th>操作</th>
+		</tr>
+		<tr th:each="item : ${attendanceList}">
+			<td th:text="${item.userName}"></td>
+			<td th:text="${item.date}"></td>
+			<td th:text="${item.startTime} ?: '-'"></td>
+			<td th:text="${item.endTime} ?: '-'"></td>
+			<td th:text="${item.status}"></td>
+			<td th:text="${item.workTime} + '時間'"></td>
+			<td>
+				<form th:action="@{/attendance/start}" method="post">
+					<input type="hidden" name="userId" th:value="${item.userId}" />
+					<button type="submit">出勤</button>
+				</form>
 
-	            <form th:action="@{/attendance/end}" method="post">
-	                <input type="hidden" name="userId" th:value="${item.userId}" />
-	                <button type="submit">退勤</button>
-	            </form>
-	        </td>
-	    </tr>
+				<form th:action="@{/attendance/end}" method="post">
+					<input type="hidden" name="userId" th:value="${item.userId}" />
+					<button type="submit">退勤</button>
+				</form>
+			</td>
+		</tr>
 	</table>
-	
+
 	<p id="topLink">
 		<a th:href="@{/}">トップページに戻る</a>
 	</p>
 </body>
+
 </html>

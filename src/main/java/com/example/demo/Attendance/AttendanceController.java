@@ -4,7 +4,9 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/attendance")
@@ -23,4 +25,18 @@ public class AttendanceController {
 		model.addAttribute("title", "出退勤記録");
 	    return "attendance/attendance";
 	}
+	
+    // 出勤処理
+    @PostMapping("/start")
+    public String startAttendance(@RequestParam("userId") int userId) {
+        attendanceDao.startAttendance(userId);
+        return "redirect:/attendance";
+    }
+
+    // 退勤処理
+    @PostMapping("/end")
+    public String endAttendance(@RequestParam("userId") int userId) {
+        attendanceDao.endAttendance(userId);
+        return "redirect:/attendance";
+    }
 }
