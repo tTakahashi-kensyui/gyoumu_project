@@ -2,6 +2,8 @@ package com.example.demo.Shift;
 
 import java.time.LocalDate;
 
+import com.example.demo.staff.StaffEntity;
+
 public class ShiftEntity {
 
 	private Long shiftId;
@@ -9,9 +11,28 @@ public class ShiftEntity {
 	private Long staffId;
 
 	private LocalDate shiftDate;
+	private String staffName;
 
 	private String timeSlot;
 	private String status;
+
+	private StaffEntity staff;
+
+	public StaffEntity getStaff() {
+		return staff;
+	}
+
+	public void setStaff(StaffEntity staff) {
+		this.staff = staff;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
 
 	public Long getShiftId() {
 		return shiftId;

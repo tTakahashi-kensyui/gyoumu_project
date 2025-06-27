@@ -1,0 +1,45 @@
+.table-wrapper {
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  min-width: 900px;
+  border: 1px solid #ccc;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  background: #f0f0f0;
+  z-index: 2;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+tr:nth-child(even) td {
+  background-color: #fafafa;
+}
+
+th.sticky-col, td.sticky-col {
+  position: sticky;
+  left: 0;
+  background-color: #f9f9f9;
+  z-index: 3;
+  font-weight: bold;
+  box-shadow: 2px 0 2px -1px rgba(0,0,0,0.1);
+}
+
+td span {
+  display: inline-block;
+  width: 100%;
+}

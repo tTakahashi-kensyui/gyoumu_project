@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>1か月分シフト登録</title>
+	<link rel="stylesheet" th:href="@{/css/shift.css}">
+</head>
+
+<body>
+
+	<h1>1か月分シフト登録</h1>
+
+	<form th:action="@{/shift/month/save}" method="post">
+
+		<!-- スタッフ選択 -->
+		<div>
+			<label>スタッフ:
+				<select name="staffId" required>
+					<option value="">選択してください</option>
+					<option th:each="staff : ${staffList}" th:value="${staff.id}"
+						th:text="${staff.name + ' (ID:' + staff.id + ')'}">
+					</option>
+				</select>
+			</label>
+		</div>
+
+		<br>
+
+		<!-- シフト日別の時間帯選択（1か月分） -->
+		<table>
+			<thead>
+				<tr>
+					<th>日付</th>
+					<th>時間帯</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="day, iterStat : ${days}">
+					<td>
+						<input type="hidden" th:name="|shifts[${iterStat.index}].shiftDate|" th:value="${day}">
+						<span th:text="${#temporals.format(day, 'yyyy-MM-dd')}"></span>
+					</td>
+					<td>
+						<select th:name="|shifts[${iterStat.index}].timeSlot|">
+							<option value="">--</option>
+							<option value="午前">午前</option>
+							<option value="午後">午後</option>
+							<option value="両方">両方</option>
+						</select>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- ステータス（共通） -->
+		<div>
+			<label>ステータス:
+				<select name="status" required>
+					<option value="希望">希望</option>
+					<option value="確定">確定</option>
+				</select>
+			</label>
+		</div>
+
+		<br>
+		<button type="submit">登録</button>
+		<a href="/shift/list">戻る</a>
+
+	</form>
+
+</body>
+
+</html>

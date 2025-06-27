@@ -1,46 +1,42 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 
 <head>
 	<meta charset="UTF-8">
-	<title>シフト一覧</title>
+	<title>シフト一覧（表形式）</title>
 	<link rel="stylesheet" th:href="@{/css/shift.css}">
 </head>
 
 <body>
 
-	<h1>シフト一覧</h1>
+	<h1 th:text="${targetYear} + '年 ' + ${targetMonth} + '月 シフト表'"></h1>
 
-	<div class="button-area">
-		<a href="/shift/form" class="add-button">新規シフト追加</a>
+	<a class="btn btn-primary" th:href="@{/shift/form}">シフト登録</a>
+	
+	<div class="table-wrapper">
+		<table>
+			<thead>
+				<tr>
+					<th class="sticky-col">スタッフ名</th>
+					<th th:each="day : ${days}" th:text="${day.dayOfMonth}" class="date-header">
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="entry : ${shiftMatrix}">
+					<!-- スタッフ名 -->
+					<td class="sticky-col" th:text="${entry.key != null ? entry.key.user_name : 'スタッフ不明'}"></td>
+
+					<!-- 各日のシフト内容 -->
+					<td th:each="day : ${days}">
+						<span th:with="shift=${entry.value[day]}"
+							th:text="${shift != null ? shift.timeSlot + '（' + shift.status + '）' : '未提出'}">
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
-
-	<table class="shift-table">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>スタッフID</th>
-				<th>日付</th>
-				<th>開始</th>
-				<th>終了</th>
-				<th>状態</th>
-				<th>操作</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="shift : ${shifts}">
-				<td th:text="${shift.shiftId}"></td>
-				<td th:text="${shift.staffId}"></td>
-				<td th:text="${shift.shiftDate}"></td>
-				<td th:text="${shift.status}"></td>
-				<td>
-					<a th:href="@{/shift/edit/{id}(id=${shift.shiftId})}" class="edit-button">編集</a>
-					<a th:href="@{/shift/delete/{id}(id=${shift.shiftId})}" class="delete-button"
-						onclick="return confirm('本当に削除しますか？')">削除</a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
 
 </body>
 

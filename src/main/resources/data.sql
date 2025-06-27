@@ -16,6 +16,8 @@ VALUES
 
 
 -- シフトデータ
-INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (1,'2025-07-01','午前','希望');
-INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (3,'2025-07-01','午後','確定');
-INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (2,'2025-07-02','両方','確定');
+INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (1,'2025-06-25','午前','希望');
+INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (1,'2025-06-26','午前','希望');
+INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (1,'2025-06-27','午前','希望');
+INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (3,'2025-06-25','午後','確定');
+INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (2,'2025-06-26','両方','確定');
