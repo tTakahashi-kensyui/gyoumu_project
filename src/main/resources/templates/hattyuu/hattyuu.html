@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>ラーメン屋 個別発注システム</title>
-  <style>
+   <style>
     body {
       font-family: "Segoe UI", sans-serif;
       max-width: 900px;
@@ -106,16 +106,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>麺</td><td><input type="number" value="30"></td><td><button class="order-btn small-btn">発注</button></td></tr>
-      <tr><td>スープ</td><td><input type="number" value="20"></td><td><button class="order-btn small-btn">発注</button></td></tr>
-      <tr><td>チャーシュー</td><td><input type="number" value="15"></td><td><button class="order-btn small-btn">発注</button></td></tr>
-      <tr><td>メンマ</td><td><input type="number" value="10"></td><td><button class="order-btn small-btn">発注</button></td></tr>
-      <tr><td>のり</td><td><input type="number" value="10"></td><td><button class="order-btn small-btn">発注</button></td></tr>
-      <tr><td>ネギ</td><td><input type="number" value="12"></td><td><button class="order-btn small-btn">発注</button></td></tr>
-      <tr><td>玉子</td><td><input type="number" value="18"></td><td><button class="order-btn small-btn">発注</button></td></tr>
-      <tr><td>どんぶり</td><td><input type="number" value="5"></td><td><button class="order-btn small-btn">発注</button></td></tr>
-      <tr><td>レンゲ</td><td><input type="number" value="5"></td><td><button class="order-btn small-btn">発注</button></td></tr>
-      <tr><td>調味料</td><td><input type="number" value="3"></td><td><button class="order-btn small-btn">発注</button></td></tr>
+      <tr><td>麺</td><td><input type="number" value="30"></td><td><button class="order-btn">発注</button></td></tr>
+      <tr><td>スープ</td><td><input type="number" value="20"></td><td><button class="order-btn">発注</button></td></tr>
+      <tr><td>チャーシュー</td><td><input type="number" value="15"></td><td><button class="order-btn">発注</button></td></tr>
+      <tr><td>メンマ</td><td><input type="number" value="10"></td><td><button class="order-btn">発注</button></td></tr>
+      <tr><td>のり</td><td><input type="number" value="10"></td><td><button class="order-btn">発注</button></td></tr>
+      <tr><td>ネギ</td><td><input type="number" value="12"></td><td><button class="order-btn">発注</button></td></tr>
+      <tr><td>玉子</td><td><input type="number" value="18"></td><td><button class="order-btn">発注</button></td></tr>
     </tbody>
   </table>
 
@@ -144,6 +141,7 @@
     <div id="logList">
       <!-- 発注ログがここに表示される -->
     </div>
+    <button id="sendToHQ">📨 本部へ送信</button>
   </div>
 
   <script>
@@ -151,19 +149,34 @@
     const customTableBody = document.querySelector("#customTable tbody");
     const logList = document.getElementById("logList");
 
+    // 発注ログを作成し表示する関数
     function logOrder(name, qty) {
       const now = new Date();
       const dateStr = now.toLocaleDateString("ja-JP");
       const timeStr = now.toLocaleTimeString("ja-JP", { hour: '2-digit', minute: '2-digit' });
+
       const entry = document.createElement("div");
       entry.className = "log-entry";
-      entry.textContent = `【${dateStr} ${timeStr}】「${name}」を ${qty} 個 発注しました。`;
+
+      const text = document.createElement("span");
+      text.textContent = `【${dateStr} ${timeStr}】「${name}」を ${qty} 個 発注しました。`;
+
+      const cancelBtn = document.createElement("button");
+      cancelBtn.textContent = "取消";
+      cancelBtn.addEventListener("click", function () {
+        if (confirm("この発注を取り消しますか？")) {
+          entry.remove();
+        }
+      });
+
+      entry.appendChild(text);
+      entry.appendChild(cancelBtn);
       logList.prepend(entry);
     }
 
-    // 固定品目の発注ボタンにイベント追加
+    // 固定品目の発注ボタン
     document.querySelectorAll("#fixedTable .order-btn").forEach(button => {
-      button.addEventListener("click", function() {
+      button.addEventListener("click", function () {
         const row = this.closest("tr");
         const name = row.cells[0].textContent;
         const qty = row.cells[1].querySelector("input").value;
@@ -175,41 +188,31 @@
       });
     });
 
-    // 自由入力フォームの「発注」ボタン（品目を追加＋即発注）
-    customForm.addEventListener("submit", function(event) {
+    // 自由入力フォームの送信処理
+    customForm.addEventListener("submit", function (event) {
       event.preventDefault();
 
       const name = document.getElementById("customName").value.trim();
       const qty = document.getElementById("customQty").value;
 
       if (name && qty > 0) {
-        // 表に追加
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${name}</td>
-          <td><input type="number" value="${qty}"></td>
-          <td><button class="order-btn small-btn">発注</button></td>
-        `;
-        customTableBody.appendChild(row);
-
+       
         // 発注履歴に記録
         logOrder(name, qty);
-
-        // 新しい発注ボタンにもイベント付加
-        const newButton = row.querySelector("button");
-        newButton.addEventListener("click", function() {
-          const qtyVal = row.querySelector("input").value;
-          if (qtyVal > 0) {
-            logOrder(name, qtyVal);
-          } else {
-            alert("発注数を入力してください。");
-          }
+customForm.reset();
+  } else {
+    alert("品目名と発注数を入力してください。");
+  }
+        
         });
 
-        // 入力フォームをリセット
-        customForm.reset();
-      } else {
-        alert("品目名と発注数を入力してください。");
+    
+
+    // 本部へ送信ボタン
+    document.getElementById("sendToHQ").addEventListener("click", function () {
+      if (confirm("これまでの発注履歴を本部へ送信しますか？")) {
+        logList.innerHTML = "";
+        alert("発注は本部に送信されました。");
       }
     });
   </script>
