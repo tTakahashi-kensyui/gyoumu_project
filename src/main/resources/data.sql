@@ -13,3 +13,9 @@ INSERT INTO attendanceData (attendance_id, user_id, date, start_time, end_time, 
 VALUES 
 (1, 1, '2025-06-26', NULL, NULL, 0, NULL, '未出勤', NULL),
 (2, 2, '2025-06-26', '09:00:00', NULL, 0, NULL, '出勤中', NULL);
+
+
+-- シフトデータ
+INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (1,'2025-07-01','午前','希望');
+INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (3,'2025-07-01','午後','確定');
+INSERT INTO shift (staff_id,shift_date,time_slot,status) VALUES (2,'2025-07-02','両方','確定');

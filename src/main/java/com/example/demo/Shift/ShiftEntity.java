@@ -1,30 +1,32 @@
 package com.example.demo.Shift;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-
-import com.example.demo.Entity.StaffEntity;
 
 public class ShiftEntity {
 
-	private Long id;
+	private Long shiftId;
 
-	private StaffEntity staff;
+	private Long staffId;
 
-	public Long getId() {
-		return id;
+	private LocalDate shiftDate;
+
+	private String timeSlot;
+	private String status;
+
+	public Long getShiftId() {
+		return shiftId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setShiftId(Long shiftId) {
+		this.shiftId = shiftId;
 	}
 
-	public StaffEntity getStaff() {
-		return staff;
+	public Long getStaffId() {
+		return staffId;
 	}
 
-	public void setStaff(StaffEntity staff) {
-		this.staff = staff;
+	public void setStaffId(Long staffId) {
+		this.staffId = staffId;
 	}
 
 	public LocalDate getShiftDate() {
@@ -35,20 +37,12 @@ public class ShiftEntity {
 		this.shiftDate = shiftDate;
 	}
 
-	public LocalTime getStartTime() {
-		return startTime;
+	public String getTimeSlot() {
+		return timeSlot;
 	}
 
-	public void setStartTime(LocalTime startTime) {
-		this.startTime = startTime;
-	}
-
-	public LocalTime getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(LocalTime endTime) {
-		this.endTime = endTime;
+	public void setTimeSlot(String timeSlot) {
+		this.timeSlot = timeSlot;
 	}
 
 	public String getStatus() {
@@ -59,8 +53,4 @@ public class ShiftEntity {
 		this.status = status;
 	}
 
-	private LocalDate shiftDate;
-	private LocalTime startTime;
-	private LocalTime endTime;
-	private String status;
 }

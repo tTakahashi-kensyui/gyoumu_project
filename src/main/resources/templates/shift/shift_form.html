@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>シフト登録フォーム</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+  <h1>シフト登録</h1>
+
+  <form th:action="@{/shift/save}" th:object="${shift}" method="post">
+
+    <!-- IDは隠しフィールド（編集時のみ使用） -->
+    <input type="hidden" th:field="*{shiftId}"/>
+
+    <div>
+      <label>スタッフID:
+        <input type="number" th:field="*{staffId}" required>
+      </label>
+    </div>
+
+    <div>
+      <label>シフト日付:
+        <input type="date" th:field="*{shiftDate}" required>
+      </label>
+    </div>
+
+    <div>
+      <label>時間帯:
+        <select th:field="*{timeSlot}" required>
+          <option value="">選択してください</option>
+          <option value="午前">午前（11:00〜15:00）</option>
+          <option value="午後">午後（18:00〜21:00）</option>
+          <option value="両方">両方（11:00〜21:00）</option>
+        </select>
+      </label>
+    </div>
+
+    <div>
+      <label>ステータス:
+        <select th:field="*{status}" required>
+          <option value="">選択してください</option>
+          <option value="希望">希望</option>
+          <option value="確定">確定</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="button-area">
+      <button type="submit">登録</button>
+      <a href="/shift/list">戻る</a>
+    </div>
+
+  </form>
+
+</body>
+</html>
