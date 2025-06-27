@@ -23,49 +23,82 @@ public class AttendanceDao {
 	// 勤怠一覧
 	public List<AttendanceEntity> findAll() {
 		String sql = "SELECT * FROM attendanceData";
-		
+
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AttendanceEntity.class));
 	}
 
 	// 出勤処理
 	public void startAttendance(int userId) {
-		// 現在時刻
-		String nowTime = LocalTime.now().toString();
-		String today = LocalDate.now().toString();
+		//		// 現在時刻
+		//		String nowTime = LocalTime.now().toString();
+		//		String today = LocalDate.now().toString();
+		//
+		//		String sql = """
+		//				UPDATE attendanceData
+		//				SET status = '出勤中',
+		//				    start_time = ?
+		//				WHERE user_id = ? AND date = ?
+		//				""";
+		//		jdbcTemplate.update(sql, nowTime, userId, today);
 
-		String sql = """
-				UPDATE attendanceData
-				SET status = '出勤中',
-				    start_time = ?
-				WHERE user_id = ? AND date = ?
-				""";
-		jdbcTemplate.update(sql, nowTime, userId, today);
-		
+		String today = LocalDate.now().toString();
+		String nowTime = LocalTime.now().toString();
+
+		//既に今日のデータがあるかを確認する
+		String selectSql = "SELECT * FROM attendanceData WHERE user_id = ? AND date = ?";
+		AttendanceEntity entity = jdbcTemplate.queryForObject(
+			    "SELECT * FROM attendanceData WHERE user_id = ? AND date = ?",
+			    new BeanPropertyRowMapper<>(AttendanceEntity.class),
+			    userId, today
+			);
+
+		if (entity != null ) {
+			//あるならUPDATE
+			String updateSql = """
+					UPDATE attendanceData
+					SET status = '出勤中',
+						start_time = ?,
+						end_time = NULL,
+						work_time = NULL,
+						remark = NULL
+						WHERE user_id = ? AND date = ?
+					""";
+			jdbcTemplate.update(updateSql, nowTime, userId, today);
+		} else {
+			//	ないならINSERT
+			String insertSql = """
+					INSERT INTO attendanceData(user_id,date,start_time,status)
+					VALUES (?,?,?,'出勤中')
+					""";
+			jdbcTemplate.update(insertSql, nowTime, userId, today);
+		}
 	}
 
 	// 退勤処理
 	public void endAttendance(int userId) {
-		// 出勤中のデータを探す
+
+		String today = LocalDate.now().toString();
+
+		//出勤中のデータを取得
 		String selectSql = """
 				    SELECT * FROM attendanceData
-				    WHERE user_id = ? AND status = '出勤中'
-				""";
-
+				   	WHERE user_id = ? AND status = '出勤中'
+					""";
 		List<Map<String, Object>> list = jdbcTemplate.queryForList(selectSql, userId);
-
+		
 		if (list.isEmpty()) {
 			System.out.println("出勤中のデータがありません");
 			return;
-		}
 
+		}
 		Map<String, Object> attendance = list.get(0);
 		int attendanceId = (int) attendance.get("attendance_id");
 		Time startTimeSql = (Time) attendance.get("start_time");
 		LocalTime startTime = startTimeSql.toLocalTime();
-
+		
 		LocalTime endTime = LocalTime.now();
 
-		// 勤務時間計算
+		 //勤務時間計算
 		Duration duration = Duration.between(startTime, endTime);
 		long hours = duration.toHours();
 		long minutes = duration.toMinutesPart();
@@ -103,19 +136,5 @@ public class AttendanceDao {
 				""";
 
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AttendanceWithUserEntity.class));
-//		return jdbcTemplate.query(sql, (rs, rowNum) -> {
-//			AttendanceWithUserEntity entity = new AttendanceWithUserEntity();
-//			entity.setAttendanceId(rs.getInt("attendance_id"));
-//			entity.setUserId(rs.getInt("user_id"));
-//			entity.setUserName(rs.getString("user_name"));
-//			entity.setDate(rs.getDate("date").toLocalDate());
-//			entity.setStartTime(rs.getTime("start_time") != null ? rs.getTime("start_time").toLocalTime() : null);
-//			entity.setEndTime(rs.getTime("end_time") != null ? rs.getTime("end_time").toLocalTime() : null);
-//			entity.setBreakTime(rs.getDouble("break_time"));
-//			entity.setWorkTime(rs.getString("work_time"));
-//			entity.setStatus(rs.getString("status"));
-//			entity.setRemark(rs.getString("remark"));
-//			return entity;
-//		});
 	}
 }

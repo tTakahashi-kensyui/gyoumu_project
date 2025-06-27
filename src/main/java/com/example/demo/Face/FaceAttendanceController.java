@@ -1,5 +1,6 @@
 package com.example.demo.Face;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Attendance.AttendanceDao;
@@ -12,16 +13,16 @@ public class FaceAttendanceController {
 		this.attendanceDao = attendanceDao;
 	}
 	
-	//@PostMapping("face/attendance/start")
-	//public String faceStartAttendance() {
-		//int userId = 1;
-		//attendanceDao.startAttendance(userId);
-		//return "出勤しました";
-	//}
-	//@PostMapping("face/attendance/end")
-	//public String faceEndAttendance() {
-		//int userId = 1;
-		//attendanceDao.startAttendance(userId);
-		//return "退勤しました";
-	//}
+	@PostMapping("/face/attendance/start")
+	public String faceStartAttendance() {
+		int userId = 1;
+		attendanceDao.startAttendance(userId);
+		 return "redirect:/face/complete?type=start";
+	}
+	@PostMapping("fase/attendance/end")
+	public String faceEndAttendance() {
+		int userId = 1;
+		attendanceDao.startAttendance(userId);
+		 return "redirect:/face/complete?type=end";
+	}
 }
