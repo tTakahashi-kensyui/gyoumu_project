@@ -87,6 +87,13 @@ public class AttendanceDao {
 
 		//勤務時間計算
 		Duration duration = Duration.between(startTime, endTime);
+		
+		if (duration.isNegative() || duration.isZero()) {
+		    System.out.println("勤務時間が不正です");
+		    return;
+		}
+		
+
 		long hours = duration.toHours();
 		long minutes = duration.toMinutesPart();
 		long seconds = duration.toSecondsPart();
