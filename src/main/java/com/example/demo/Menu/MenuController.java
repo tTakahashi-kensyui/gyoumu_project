@@ -10,7 +10,7 @@ import com.example.demo.dao.MenuDao;
 public class MenuController {
 
 	private final MenuDao menuDao;
-	
+
 	public MenuController(MenuDao menuDao) {
 		this.menuDao = menuDao;
 	}
@@ -21,27 +21,34 @@ public class MenuController {
 		return "Menu/index";
 	}
 
-	    @RequestMapping("/login")
-	    public String showLoginPage() {
-	        return "kaikei/login"; // login.htmlがtemplates内に必要です
-	    }
-	    
+	@RequestMapping("/login")
+	public String showLoginPage() {
+		return "kaikei/login"; // login.htmlがtemplates内に必要です
+	}
+
 	@RequestMapping("/hattyuu")
 	public String hatyuu(Model model) {
 		return "hattyuu/hattyuu";
 	}
+
 	@RequestMapping("/honbu")
 	public String honbu(Model model) {
 		return "hattyuu/honbu";
 	}
-	
-	 @RequestMapping("/home")
-	    public String showHomePage() {
-	        return "kaikei/home";  // home.html を表示
-	    }
 
-	    @RequestMapping("/summary")
-	    public String showSummaryPage() {
-	        return "kaikei/summary";  // summary.html を表示
-	    }
+	@RequestMapping("/home")
+	public String showHomePage() {
+		return "kaikei/home"; // home.html を表示
+	}
+
+	@RequestMapping("/summary")
+	public String showSummaryPage() {
+		return "kaikei/summary"; // summary.html を表示
+	}
+
+	@RequestMapping("/faceTop")
+	public String faceTopPage(Model model) {
+		model.addAttribute("title", "トップページ");
+		return "face/faceTop";
+	}
 }
